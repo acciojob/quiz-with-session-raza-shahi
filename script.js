@@ -1,4 +1,30 @@
 //your JS code here.
+const questionsElement = document.getElementById("questions");
+const submitBtn = document.getElementById("submit");
+const scoreElement = document.getElementById("score");
+
+const userAnswers =
+  JSON.parse(sessionStorage.getItem("progress")) || null || Array(5).fill(null);
+console.log(userAnswers);
+
+function calculateScore() {
+  let score = 0;
+  for (let i = 0; i < questions.length; i++) {
+    if (userAnswers[i] === questions[i].answer) {
+      score++;
+    }
+  }
+  localStorage.setItem("score", score);
+  scoreElement.textContent = `Your score is ${score} out of ${questions.length}`;
+  sessionStorage.removeItem("progress");
+}
+function displayPreviouseScore() {
+  const savedScore = localStorage.getItem("score");
+  if (savedScore !== null) {
+    scoreElement.textContent = `Your score is ${savedScore} out of ${questions.length}`;
+  }
+}
+submitBtn.addEventListener("click", calculateScore);
 
 // Do not change code below this line
 // This code will just display the questions to the screen
@@ -32,6 +58,7 @@ const questions = [
 
 // Display the quiz questions and choices
 function renderQuestions() {
+  questionsElement.innerHTML = "";
   for (let i = 0; i < questions.length; i++) {
     const question = questions[i];
     const questionElement = document.createElement("div");
@@ -46,6 +73,10 @@ function renderQuestions() {
       if (userAnswers[i] === choice) {
         choiceElement.setAttribute("checked", true);
       }
+      choiceElement.addEventListener("change", (e) => {
+        userAnswers[i] = e.target.value;
+        sessionStorage.setItem("progress", JSON.stringify(userAnswers));
+      });
       const choiceText = document.createTextNode(choice);
       questionElement.appendChild(choiceElement);
       questionElement.appendChild(choiceText);
@@ -54,3 +85,4 @@ function renderQuestions() {
   }
 }
 renderQuestions();
+displayPreviouseScore();
