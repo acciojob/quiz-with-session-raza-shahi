@@ -22,6 +22,8 @@ function displayPreviouseScore() {
   const savedScore = localStorage.getItem("score");
   if (savedScore !== null) {
     scoreElement.textContent = `Your score is ${savedScore} out of ${questions.length}`;
+  }else {
+    scoreElement.textContent = "";
   }
 }
 submitBtn.addEventListener("click", calculateScore);
